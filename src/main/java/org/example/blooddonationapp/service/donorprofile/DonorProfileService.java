@@ -7,6 +7,7 @@ import org.example.blooddonationapp.controller.donorprofile.dto.GetDonorProfileD
 import org.example.blooddonationapp.infrastructure.entity.DonorProfileEntity;
 import org.example.blooddonationapp.infrastructure.repository.DonorProfileRepository;
 import org.example.blooddonationapp.infrastructure.repository.UserRepository;
+import org.example.blooddonationapp.service.donorprofile.error.DonorNotFoundError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class DonorProfileService {
 
     public CreateDonorProfileResponseDto create(CreateDonorProfileDto dto) {
         var user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new DonorNotFoundError(dto.getUserId()));
 
         DonorProfileEntity profile = new DonorProfileEntity();
         profile.setUser(user);

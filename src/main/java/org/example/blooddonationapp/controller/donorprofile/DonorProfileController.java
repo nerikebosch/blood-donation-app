@@ -5,6 +5,7 @@ import org.example.blooddonationapp.controller.donorprofile.dto.CreateDonorProfi
 import org.example.blooddonationapp.controller.donorprofile.dto.GetDonorProfileDto;
 import org.example.blooddonationapp.service.donorprofile.DonorProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,12 @@ public class DonorProfileController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CreateDonorProfileResponseDto> create(@RequestBody CreateDonorProfileDto dto) {
         var profile = donorProfileService.create(dto);
         return ResponseEntity.ok(profile);
+
+
     }
 
     @GetMapping("/{userId}")
