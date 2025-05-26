@@ -4,6 +4,7 @@ package org.example.blooddonationapp.service.donorprofile;
 import org.example.blooddonationapp.controller.donorprofile.dto.CreateDonorProfileDto;
 import org.example.blooddonationapp.controller.donorprofile.dto.CreateDonorProfileResponseDto;
 import org.example.blooddonationapp.controller.donorprofile.dto.GetDonorProfileDto;
+import org.example.blooddonationapp.controller.donorprofile.dto.UpdateDonorProfileDto;
 import org.example.blooddonationapp.infrastructure.entity.DonorProfileEntity;
 import org.example.blooddonationapp.infrastructure.repository.DonorProfileRepository;
 import org.example.blooddonationapp.infrastructure.repository.UserRepository;
@@ -22,20 +23,7 @@ public class DonorProfileService {
         this.userRepository = userRepository;
     }
 
-    public GetDonorProfileDto getProfileByUserId(Long userId) {
-        var profile = donorProfileRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Donor profile not found"));
-
-        return new GetDonorProfileDto(
-                profile.getBloodType(),
-                profile.getDateOfBirth(),
-                profile.getGender(),
-                profile.getAddress(),
-                profile.getLastDonationDate()
-        );
-    }
-
-    public CreateDonorProfileResponseDto create(CreateDonorProfileDto dto) {
+    public CreateDonorProfileResponseDto createDonorProfile(CreateDonorProfileDto dto) {
         var user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new DonorNotFoundError(dto.getUserId()));
 
@@ -47,7 +35,7 @@ public class DonorProfileService {
         profile.setAddress(dto.getAddress());
         profile.setLastDonationDate(dto.getLastDonationDate());
 
-        var saved = donorProfileRepository.save(profile);
+        DonorProfileEntity saved = donorProfileRepository.save(profile);
 
         return new CreateDonorProfileResponseDto(
                 saved.getId(),
@@ -59,17 +47,47 @@ public class DonorProfileService {
         );
     }
 
-    public CreateDonorProfileResponseDto getByUserId(Long userId) {
-        var profile = donorProfileRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Donor profile not found"));
+    public GetDonorProfileDto getDonorById(Long userId) {
+        DonorProfileEntity test = donorProfileRepository.findByDonorId(userId)
+                .orElseThrow(() -> new DonorNotFoundError(userId));
 
-        return new CreateDonorProfileResponseDto(
-                profile.getId(),
-                profile.getBloodType(),
-                profile.getDateOfBirth(),
-                profile.getGender(),
-                profile.getAddress(),
-                profile.getLastDonationDate()
+        return new GetDonorProfileDto(
+                test.getId(),
+                test.getBloodType(),
+                test.getDateOfBirth(),
+                test.getGender(),
+                test.getAddress(),
+                test.getLastDonationDate()
         );
+    }
+
+    public UpdateDonorProfileDto updateDonorProfile(Long userId, UpdateDonorProfileDto dto) {
+        DonorProfileEntity test = donorProfileRepository.findByDonorId(userId)
+                .orElseThrow(() -> new DonorNotFoundError(userId));
+
+        test.setAddress(dto.getAddress());
+        test.setBloodType(dto.getBloodType());
+        test.setGender(dto.getGender());
+        test.setDateOfBirth(dto.getDateOfBirth());
+        test.setLastDonationDate(dto.getLastDonationDate());
+
+        DonorProfileEntity updated = donorProfileRepository.save(test);;
+
+        return new UpdateDonorProfileDto(
+                updated.getId(),
+                updated.getBloodType(),
+                updated.getDateOfBirth(),
+                updated.getGender(),
+                updated.getAddress(),
+                updated.getLastDonationDate()
+        );
+    }
+
+    public void deleteDonorProfile(Long userId) {
+        if (!donorProfileRepository.existsById(userId)) {
+            throw new DonorNotFoundError(userId);
+        }
+
+        donorProfileRepository.deleteById(userId);
     }
 }

@@ -4,7 +4,6 @@ import org.example.blooddonationapp.controller.medicaltests.dto.CreateMedicalTes
 import org.example.blooddonationapp.controller.medicaltests.dto.CreateMedicalTestResponseDto;
 import org.example.blooddonationapp.controller.medicaltests.dto.GetMedicalTestDto;
 import org.example.blooddonationapp.controller.medicaltests.dto.UpdateMedicalTestDto;
-import org.example.blooddonationapp.infrastructure.entity.MedicalTestEntity;
 import org.example.blooddonationapp.service.medicaltests.MedicalTestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +43,7 @@ public class MedicalTestController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<GetMedicalTestDto> update(@PathVariable Long id, @RequestBody UpdateMedicalTestDto dto) {
+    public ResponseEntity<UpdateMedicalTestDto> update(@PathVariable Long id, @RequestBody UpdateMedicalTestDto dto) {
         return ResponseEntity.ok(medicalTestService.updateMedicalTest(id, dto));
     }
 

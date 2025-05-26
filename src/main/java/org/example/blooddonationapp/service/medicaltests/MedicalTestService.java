@@ -82,7 +82,7 @@ public class MedicalTestService {
         );
     }
 
-    public GetMedicalTestDto updateMedicalTest(Long medicalTestId, UpdateMedicalTestDto dto){
+    public UpdateMedicalTestDto updateMedicalTest(Long medicalTestId, UpdateMedicalTestDto dto){
         MedicalTestEntity test = medicalTestRepository.findById(medicalTestId)
                 .orElseThrow(() -> new IllegalArgumentException("Medical test not found"));
 
@@ -93,9 +93,8 @@ public class MedicalTestService {
 
         MedicalTestEntity updated = medicalTestRepository.save(test);
 
-        return new GetMedicalTestDto(
+        return new UpdateMedicalTestDto(
                 updated.getId(),
-                updated.getDonor().getId(),
                 updated.getTestType(),
                 updated.getResult(),
                 updated.getTestDate(),
