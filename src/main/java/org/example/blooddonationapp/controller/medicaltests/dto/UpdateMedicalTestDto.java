@@ -1,17 +1,20 @@
 package org.example.blooddonationapp.controller.medicaltests.dto;
 
+import org.example.blooddonationapp.commontypes.MedicalTestResult;
+import org.example.blooddonationapp.commontypes.MedicalTestType;
+
 import java.time.LocalDate;
 
 public class UpdateMedicalTestDto {
     private Long id;
-    private String testType;
-    private String result;
+    private MedicalTestType testType;
+    private MedicalTestResult result;
     private LocalDate testDate;
     private String notes;
 
     public UpdateMedicalTestDto() {}
 
-    public UpdateMedicalTestDto(Long id, String testType, String result, LocalDate testDate, String notes) {
+    public UpdateMedicalTestDto(Long id, MedicalTestType testType, MedicalTestResult result, LocalDate testDate, String notes) {
         this.id = id;
         this.testType = testType;
         this.result = result;
@@ -27,19 +30,19 @@ public class UpdateMedicalTestDto {
         this.id = id;
     }
 
-    public String getTestType() {
+    public MedicalTestType getTestType() {
         return testType;
     }
 
-    public void setTestType(String testType) {
+    public void setTestType(MedicalTestType testType) {
         this.testType = testType;
     }
 
-    public String getResult() {
+    public MedicalTestResult getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(MedicalTestResult result) {
         this.result = result;
     }
 

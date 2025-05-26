@@ -1,6 +1,8 @@
 package org.example.blooddonationapp.infrastructure.entity;
 
 import jakarta.persistence.*;
+import org.example.blooddonationapp.commontypes.MedicalTestResult;
+import org.example.blooddonationapp.commontypes.MedicalTestType;
 
 import java.time.LocalDate;
 
@@ -16,10 +18,12 @@ public class MedicalTestEntity {
     private DonorProfileEntity donor;
 
     @Column(name = "test_type", nullable = false)
-    private String testType;        // e.g. Hemoglobin, HIV, Blood Pressure
+    @Enumerated(EnumType.STRING)
+    private MedicalTestType testType;        // e.g. Hemoglobin, HIV, Blood Pressure
 
     @Column(name = "result", nullable = false)
-    private String result;          // e.g. Normal, Low, Negative
+    @Enumerated(EnumType.STRING)
+    private MedicalTestResult result;          // e.g. Normal, Low, Negative
 
     @Column(name = "test_date", nullable = false)
     private LocalDate testDate;
@@ -43,19 +47,19 @@ public class MedicalTestEntity {
         this.donor = donor;
     }
 
-    public String getTestType() {
+    public MedicalTestType getTestType() {
         return testType;
     }
 
-    public void setTestType(String testType) {
+    public void setTestType(MedicalTestType testType) {
         this.testType = testType;
     }
 
-    public String getResult() {
+    public MedicalTestResult getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(MedicalTestResult result) {
         this.result = result;
     }
 
