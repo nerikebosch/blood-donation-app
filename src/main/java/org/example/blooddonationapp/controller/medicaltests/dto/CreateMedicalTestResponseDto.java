@@ -2,7 +2,7 @@ package org.example.blooddonationapp.controller.medicaltests.dto;
 
 import java.time.LocalDate;
 
-public class GetMedicalTestDto {
+public class CreateMedicalTestResponseDto {
     private Long id;
     private Long donorId;
     private String testType;
@@ -10,9 +10,7 @@ public class GetMedicalTestDto {
     private LocalDate testDate;
     private String notes;
 
-    public GetMedicalTestDto() {}
-
-    public GetMedicalTestDto(Long id, Long donorId, String testType, String result, LocalDate testDate, String notes) {
+    public CreateMedicalTestResponseDto(Long id, Long donorId, String testType, String result, LocalDate testDate, String notes) {
         this.id = id;
         this.donorId = donorId;
         this.testType = testType;
@@ -69,5 +67,3 @@ public class GetMedicalTestDto {
         this.notes = notes;
     }
 }
-
-

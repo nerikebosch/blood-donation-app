@@ -1,26 +1,15 @@
 package org.example.blooddonationapp.controller.donationslot.dto;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 
-public class CreateSlotDto {
-
-    @Future(message = "Date must be in the future")
+public class UpdateSlotDto {
     private LocalDateTime dateTime;
-
-    @NotBlank(message = "Location is required")
     private String location;
+    private Integer capacity;
 
-    @Min(value = 1, message = "Capacity must be at least 1")
-    private int capacity;
+    public UpdateSlotDto(){}
 
-    public CreateSlotDto() {}
-
-    public CreateSlotDto(LocalDateTime dateTime, String location, int capacity) {
+    public UpdateSlotDto(LocalDateTime dateTime, String location, Integer capacity) {
         this.dateTime = dateTime;
         this.location = location;
         this.capacity = capacity;
@@ -42,11 +31,11 @@ public class CreateSlotDto {
         this.location = location;
     }
 
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 }

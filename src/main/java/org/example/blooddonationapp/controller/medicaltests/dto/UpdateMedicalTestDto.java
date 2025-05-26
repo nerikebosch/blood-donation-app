@@ -2,19 +2,17 @@ package org.example.blooddonationapp.controller.medicaltests.dto;
 
 import java.time.LocalDate;
 
-public class GetMedicalTestDto {
+public class UpdateMedicalTestDto {
     private Long id;
-    private Long donorId;
     private String testType;
     private String result;
     private LocalDate testDate;
     private String notes;
 
-    public GetMedicalTestDto() {}
+    public UpdateMedicalTestDto() {}
 
-    public GetMedicalTestDto(Long id, Long donorId, String testType, String result, LocalDate testDate, String notes) {
+    public UpdateMedicalTestDto(Long id, String testType, String result, LocalDate testDate, String notes) {
         this.id = id;
-        this.donorId = donorId;
         this.testType = testType;
         this.result = result;
         this.testDate = testDate;
@@ -27,14 +25,6 @@ public class GetMedicalTestDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDonorId() {
-        return donorId;
-    }
-
-    public void setDonorId(Long donorId) {
-        this.donorId = donorId;
     }
 
     public String getTestType() {
@@ -69,5 +59,3 @@ public class GetMedicalTestDto {
         this.notes = notes;
     }
 }
-
-

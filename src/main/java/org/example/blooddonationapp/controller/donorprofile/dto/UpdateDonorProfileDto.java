@@ -2,7 +2,7 @@ package org.example.blooddonationapp.controller.donorprofile.dto;
 
 import java.time.LocalDate;
 
-public class GetDonorProfileDto {
+public class UpdateDonorProfileDto {
     private Long userId;
     private String bloodType;
     private LocalDate dateOfBirth;
@@ -10,9 +10,9 @@ public class GetDonorProfileDto {
     private String address;
     private LocalDate lastDonationDate;
 
-    public GetDonorProfileDto() {}
+    public UpdateDonorProfileDto() {}
 
-    public GetDonorProfileDto(Long userId, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
+    public UpdateDonorProfileDto(Long userId, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
         this.userId = userId;
         this.bloodType = bloodType;
         this.dateOfBirth = dateOfBirth;
