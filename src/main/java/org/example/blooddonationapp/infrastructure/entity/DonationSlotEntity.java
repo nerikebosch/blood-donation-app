@@ -3,6 +3,7 @@ package org.example.blooddonationapp.infrastructure.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "donation_slot", schema = "blood_donation")
@@ -22,6 +23,9 @@ public class DonationSlotEntity {
 
     @Column(name = "booked_count", nullable = false)
     private int bookedCount = 0;
+
+    @OneToMany(mappedBy = "slot", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppointmentEntity> appointments;
 
     public long getId() {
         return id;
@@ -61,5 +65,13 @@ public class DonationSlotEntity {
 
     public void setBookedCount(int bookedCount) {
         this.bookedCount = bookedCount;
+    }
+
+    public List<AppointmentEntity> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<AppointmentEntity> appointments) {
+        this.appointments = appointments;
     }
 }
