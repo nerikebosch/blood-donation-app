@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class GetDonorProfileDto {
     private Long userId;
+    private String ethnicity;
     private String bloodType;
     private LocalDate dateOfBirth;
     private String gender;
@@ -12,8 +13,9 @@ public class GetDonorProfileDto {
 
     public GetDonorProfileDto() {}
 
-    public GetDonorProfileDto(Long userId, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
+    public GetDonorProfileDto(Long userId, String ethnicity, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
         this.userId = userId;
+        this.ethnicity = ethnicity;
         this.bloodType = bloodType;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -27,6 +29,14 @@ public class GetDonorProfileDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public String getBloodType() {

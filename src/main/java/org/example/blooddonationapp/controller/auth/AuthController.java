@@ -28,14 +28,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponseDto> register(@Valid @RequestBody RegisterDto requestBody){
-        RegisterResponseDto dto = authService.register(requestBody);
-        return new ResponseEntity<>(dto, HttpStatus.CREATED);
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto requestBody){
+        try {
+            System.out.println("Register request received: " + requestBody.getUsername());
+            RegisterResponseDto dto = authService.register(requestBody);
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();  // Log the full error stack trace
+            return new ResponseEntity<>("Register failed: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/login")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<LoginResponseDto> register(@RequestBody LoginDto requestBody){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto requestBody){
         LoginResponseDto dto = authService.login(requestBody);
         return new ResponseEntity<>(dto, HttpStatus.CREATED);
 

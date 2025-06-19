@@ -1,24 +1,25 @@
 package org.example.blooddonationapp.controller.appointment.dto;
 
 import org.example.blooddonationapp.commontypes.AppointmentStatus;
+import org.example.blooddonationapp.controller.donationslot.dto.CreateSlotDto;
 
 import java.time.LocalDateTime;
 
 public class GetAppointmentDto {
     private Long id;
     private Long userId;
-    private Long slotId;
     private LocalDateTime bookedAt;
     private AppointmentStatus status;
+    private CreateSlotDto slot;
 
     public GetAppointmentDto() {}
 
-    public GetAppointmentDto(Long id, Long userId, Long slotId, LocalDateTime bookedAt, AppointmentStatus status) {
+    public GetAppointmentDto(Long id, Long userId, LocalDateTime bookedAt, AppointmentStatus status, CreateSlotDto slot) {
         this.id = id;
         this.userId = userId;
-        this.slotId = slotId;
         this.bookedAt = bookedAt;
         this.status = status;
+        this.slot = slot;
     }
 
     public Long getId() {
@@ -37,14 +38,6 @@ public class GetAppointmentDto {
         this.userId = userId;
     }
 
-    public Long getSlotId() {
-        return slotId;
-    }
-
-    public void setSlotId(Long slotId) {
-        this.slotId = slotId;
-    }
-
     public LocalDateTime getBookedAt() {
         return bookedAt;
     }
@@ -59,5 +52,13 @@ public class GetAppointmentDto {
 
     public void setStatus(AppointmentStatus status) {
         this.status = status;
+    }
+
+    public CreateSlotDto getSlot() {
+        return slot;
+    }
+
+    public void setSlot(CreateSlotDto slot) {
+        this.slot = slot;
     }
 }

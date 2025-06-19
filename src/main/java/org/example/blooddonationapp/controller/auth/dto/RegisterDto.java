@@ -20,12 +20,36 @@ public class RegisterDto {
     @Email
     private String email;
 
-    public RegisterDto(String password, String username, UserRole role, String email) {
+    private String name;
+
+    private String surname;
+
+
+    public RegisterDto(String password, String username, UserRole role, String email, String name, String surname) {
         this.password = password;
         this.username = username;
         this.role = role;
         this.email = email;
+        this.name = name;
+        this.surname = surname;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
     public String getPassword() {
         return password;
     }

@@ -15,6 +15,9 @@ public class DonorProfileEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Column(name = "ethnicity")
+    private String ethnicity;
+
     @Column(name = "blood_type")
     private String bloodType;
 
@@ -36,6 +39,14 @@ public class DonorProfileEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public UserEntity getUser() {

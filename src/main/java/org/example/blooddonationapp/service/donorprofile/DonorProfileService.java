@@ -29,6 +29,7 @@ public class DonorProfileService {
 
         DonorProfileEntity profile = new DonorProfileEntity();
         profile.setUser(user);
+        profile.setEthnicity(dto.getEthnicity());
         profile.setBloodType(dto.getBloodType());
         profile.setDateOfBirth(dto.getDateOfBirth());
         profile.setGender(dto.getGender());
@@ -39,6 +40,7 @@ public class DonorProfileService {
 
         return new CreateDonorProfileResponseDto(
                 saved.getId(),
+                saved.getEthnicity(),
                 saved.getBloodType(),
                 saved.getDateOfBirth(),
                 saved.getGender(),
@@ -48,11 +50,12 @@ public class DonorProfileService {
     }
 
     public GetDonorProfileDto getDonorById(Long userId) {
-        DonorProfileEntity test = donorProfileRepository.findByDonorId(userId)
+        DonorProfileEntity test = donorProfileRepository.findById(userId)
                 .orElseThrow(() -> new DonorNotFoundError(userId));
 
         return new GetDonorProfileDto(
                 test.getId(),
+                test.getEthnicity(),
                 test.getBloodType(),
                 test.getDateOfBirth(),
                 test.getGender(),
@@ -62,10 +65,11 @@ public class DonorProfileService {
     }
 
     public UpdateDonorProfileDto updateDonorProfile(Long userId, UpdateDonorProfileDto dto) {
-        DonorProfileEntity test = donorProfileRepository.findByDonorId(userId)
+        DonorProfileEntity test = donorProfileRepository.findById(userId)
                 .orElseThrow(() -> new DonorNotFoundError(userId));
 
         test.setAddress(dto.getAddress());
+        test.setEthnicity(dto.getEthnicity());
         test.setBloodType(dto.getBloodType());
         test.setGender(dto.getGender());
         test.setDateOfBirth(dto.getDateOfBirth());
@@ -75,6 +79,7 @@ public class DonorProfileService {
 
         return new UpdateDonorProfileDto(
                 updated.getId(),
+                updated.getEthnicity(),
                 updated.getBloodType(),
                 updated.getDateOfBirth(),
                 updated.getGender(),

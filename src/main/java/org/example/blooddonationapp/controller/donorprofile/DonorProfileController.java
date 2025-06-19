@@ -24,7 +24,6 @@ public class DonorProfileController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('DONOR')")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CreateDonorProfileResponseDto> create(@RequestBody CreateDonorProfileDto dto) {
         CreateDonorProfileResponseDto profile = donorProfileService.createDonorProfile(dto);

@@ -1,6 +1,7 @@
 package org.example.blooddonationapp.service.auth;
 
 
+import org.example.blooddonationapp.commontypes.UserRole;
 import org.example.blooddonationapp.controller.auth.dto.LoginDto;
 import org.example.blooddonationapp.controller.auth.dto.LoginResponseDto;
 import org.example.blooddonationapp.controller.auth.dto.RegisterDto;
@@ -49,6 +50,8 @@ public class AuthService {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(dto.getEmail());
+        userEntity.setName(dto.getName());
+        userEntity.setSurname(dto.getSurname());
         userRepository.save(userEntity);
 
         AuthEntity authEntity = new AuthEntity();
@@ -64,6 +67,7 @@ public class AuthService {
 
     // check if user is correct
     public LoginResponseDto login(LoginDto dto){
+        System.out.println("Login attempt for user " + dto.getUsername());
         AuthEntity authEntity = authRepository.findByUsername(dto.getUsername()).orElseThrow(RuntimeException::new);
 
         if(!passwordEncoder.matches(dto.getPassword(), authEntity.getPassword())){
@@ -71,7 +75,8 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(authEntity);
+        UserRole role = authEntity.getRole();
 
-        return new LoginResponseDto(token);
+        return new LoginResponseDto(token, role);
     }
 }

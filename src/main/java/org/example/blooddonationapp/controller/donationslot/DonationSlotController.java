@@ -27,7 +27,7 @@ public class DonationSlotController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DONOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ROLE_DONOR')")
     public List<CreateSlotResponseDto> getAll() {
         return slotService.getAll();
     }

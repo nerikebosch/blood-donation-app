@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String jwt;
 
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                System.out.println("Invalid JWT token");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -53,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e){
+            System.out.println("JWT validation failed: " + e.getMessage());
             filterChain.doFilter(request, response);
         }
     }

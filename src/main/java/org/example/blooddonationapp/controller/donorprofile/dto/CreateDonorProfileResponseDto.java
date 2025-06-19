@@ -4,14 +4,16 @@ import java.time.LocalDate;
 
 public class CreateDonorProfileResponseDto {
     private Long userId;
+    private String ethnicity;
     private String bloodType;
     private LocalDate dateOfBirth;
     private String gender;
     private String address;
     private LocalDate lastDonationDate;
 
-    public CreateDonorProfileResponseDto(Long userId, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
+    public CreateDonorProfileResponseDto(Long userId, String ethnicity, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {
         this.userId = userId;
+        this.ethnicity = ethnicity;
         this.bloodType = bloodType;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -25,6 +27,14 @@ public class CreateDonorProfileResponseDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public String getBloodType() {
