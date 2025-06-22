@@ -1,14 +1,14 @@
 package org.example.blooddonationapp.controller.user;
 
+import jakarta.validation.Valid;
 import org.example.blooddonationapp.controller.user.dto.GetUserDto;
+import org.example.blooddonationapp.controller.user.dto.UpdateUserDto;
 import org.example.blooddonationapp.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -30,4 +30,19 @@ public class UserController {
         GetUserDto userDto = userService.getUserByUsername(username);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<GetUserDto> getUserById(@PathVariable Long id) {
+        GetUserDto userDto = userService.getUserById(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<Void> updateMe(Principal principal,
+                                         @RequestBody @Valid UpdateUserDto dto) {
+        userService.updateUserByUsername(principal.getName(), dto);
+        return ResponseEntity.noContent().build();
+    }
+
 }

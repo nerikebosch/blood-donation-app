@@ -33,8 +33,8 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointment(id));
     }
 
-    @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DONOR')")
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DONOR')")
     public ResponseEntity<Void> updateAppointmentStatus(@PathVariable long id,
                                                         @RequestBody UpdateAppointmentStatusDto dto) {
         appointmentService.updateAppointmentStatus(id, dto);
@@ -42,7 +42,7 @@ public class AppointmentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_DONOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DONOR')")
     public ResponseEntity<List<GetAppointmentDto>> getAllAppointments() {
         return ResponseEntity.ok(appointmentService.getAllAppointments());
     }
