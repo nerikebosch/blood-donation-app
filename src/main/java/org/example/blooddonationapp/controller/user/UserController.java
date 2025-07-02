@@ -45,4 +45,20 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> updateUserById(@PathVariable Long id,
+                                               @RequestBody @Valid UpdateUserDto dto) {
+        userService.updateUserById(id, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUserAndProfileById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

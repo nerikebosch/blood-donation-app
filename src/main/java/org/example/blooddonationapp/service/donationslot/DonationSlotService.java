@@ -20,14 +20,15 @@ public class DonationSlotService {
         slot.setDateTime(dto.getDateTime());
         slot.setLocation(dto.getLocation());
         slot.setCapacity(dto.getCapacity());
+        slot.setBookedCount(dto.getBookedCount());
 
         var saved = slotRepo.save(slot);
-        return new CreateSlotResponseDto(saved.getId(), saved.getLocation(), saved.getDateTime(), saved.getCapacity());
+        return new CreateSlotResponseDto(saved.getId(), saved.getLocation(), saved.getDateTime(), saved.getCapacity(), saved.getBookedCount());
     }
 
     public List<CreateSlotResponseDto> getAll() {
         return slotRepo.findAll().stream()
-                .map(s -> new CreateSlotResponseDto(s.getId(), s.getLocation(), s.getDateTime(), s.getCapacity()))
+                .map(s -> new CreateSlotResponseDto(s.getId(), s.getLocation(), s.getDateTime(), s.getCapacity(), s.getBookedCount()))
                 .collect(Collectors.toList());
     }
 }

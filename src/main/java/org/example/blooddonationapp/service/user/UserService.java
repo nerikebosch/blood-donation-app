@@ -5,6 +5,7 @@ import org.example.blooddonationapp.controller.user.dto.UpdateUserDto;
 import org.example.blooddonationapp.infrastructure.entity.AuthEntity;
 import org.example.blooddonationapp.infrastructure.entity.UserEntity;
 import org.example.blooddonationapp.infrastructure.repository.AuthRepository;
+import org.example.blooddonationapp.infrastructure.repository.DonorProfileRepository;
 import org.example.blooddonationapp.infrastructure.repository.UserRepository;
 import org.example.blooddonationapp.service.user.error.UserNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,13 @@ public class UserService {
 
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
+    private final DonorProfileRepository donorProfileRepository;
 
     @Autowired
-    public UserService(AuthRepository authRepository, UserRepository userRepository) {
+    public UserService(AuthRepository authRepository, UserRepository userRepository, DonorProfileRepository donorProfileRepository) {
         this.authRepository = authRepository;
         this.userRepository = userRepository;
+        this.donorProfileRepository = donorProfileRepository;
     }
 
     public GetUserDto getUserByUsername(String username) {
@@ -46,4 +49,25 @@ public class UserService {
         user.setEmail(dto.getEmail());
         userRepository.save(user);
     }
+
+    @Transactional
+    public void updateUserById(Long userId, UpdateUserDto dto) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> UserNotFound.createWithId(userId));
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setEmail(dto.getEmail());
+        userRepository.save(user);
+    }
+
+
+    @Transactional
+    public void deleteUserAndProfileById(Long userId) {
+        // First delete donor profile if exists
+        donorProfileRepository.deleteDonorProfileById(userId);
+
+        // Then delete user
+        userRepository.deleteById(userId);
+    }
+
 }

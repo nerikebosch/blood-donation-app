@@ -9,6 +9,7 @@ import org.example.blooddonationapp.service.appointment.AppointmentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -46,5 +47,16 @@ public class AppointmentController {
     public ResponseEntity<List<GetAppointmentDto>> getAllAppointments() {
         return ResponseEntity.ok(appointmentService.getAllAppointments());
     }
+
+    @GetMapping("/mine")
+    @PreAuthorize("hasRole('ROLE_DONOR')")
+    public ResponseEntity<List<GetAppointmentDto>> getMyAppointments(Principal principal) {
+        String username = principal.getName();
+        System.out.println("Current principal: " + principal);
+        System.out.println("Username from principal: " + username);
+        List<GetAppointmentDto> appointments = appointmentService.getAppointmentsByUsername(username);
+        return ResponseEntity.ok(appointments);
+    }
+
 }
 

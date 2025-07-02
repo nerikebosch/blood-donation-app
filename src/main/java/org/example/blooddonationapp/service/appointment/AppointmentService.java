@@ -7,16 +7,20 @@ import org.example.blooddonationapp.controller.appointment.dto.GetAppointmentDto
 import org.example.blooddonationapp.controller.appointment.dto.UpdateAppointmentStatusDto;
 import org.example.blooddonationapp.controller.donationslot.dto.CreateSlotDto;
 import org.example.blooddonationapp.infrastructure.entity.AppointmentEntity;
+import org.example.blooddonationapp.infrastructure.entity.AuthEntity;
 import org.example.blooddonationapp.infrastructure.entity.DonationSlotEntity;
 import org.example.blooddonationapp.infrastructure.entity.UserEntity;
 import org.example.blooddonationapp.infrastructure.repository.AppointmentRepository;
+import org.example.blooddonationapp.infrastructure.repository.AuthRepository;
 import org.example.blooddonationapp.infrastructure.repository.DonationSlotRepository;
 import org.example.blooddonationapp.infrastructure.repository.UserRepository;
 import org.example.blooddonationapp.commontypes.AppointmentStatus;
+import org.example.blooddonationapp.service.user.error.UserNotFound;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -24,13 +28,15 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final DonationSlotRepository slotRepository;
+    private final AuthRepository authRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               UserRepository userRepository,
-                              DonationSlotRepository slotRepository) {
+                              DonationSlotRepository slotRepository, AuthRepository authRepository) {
         this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
         this.slotRepository = slotRepository;
+        this.authRepository = authRepository;
     }
 
     @Transactional
@@ -47,6 +53,7 @@ public class AppointmentService {
         }
 
         slot.setCapacity(slot.getCapacity() - 1);
+        slot.setBookedCount(slot.getBookedCount() + 1);
         slotRepository.save(slot);
 
         AppointmentEntity appointment = new AppointmentEntity();
@@ -83,7 +90,8 @@ public class AppointmentService {
         CreateSlotDto slotDto = new CreateSlotDto(
                 slot.getDateTime(),
                 slot.getLocation(),
-                slot.getCapacity()
+                slot.getCapacity(),
+                slot.getBookedCount()
         );
 
         dto.setSlot(slotDto);
@@ -104,7 +112,8 @@ public class AppointmentService {
             CreateSlotDto slotDto = new CreateSlotDto(
                     slot.getDateTime(),
                     slot.getLocation(),
-                    slot.getCapacity()
+                    slot.getCapacity(),
+                    slot.getBookedCount()
             );
             dto.setSlot(slotDto);
         }
@@ -127,4 +136,37 @@ public class AppointmentService {
         appointment.setAppointmentStatus(dto.getAppointmentStatus());
         appointmentRepository.save(appointment);
     }
+
+    public List<GetAppointmentDto> getAppointmentsByUsername(String username) {
+        AuthEntity auth = authRepository.findByUsername(username).orElseThrow(() -> UserNotFound.createWithUsername(username));
+        UserEntity user = auth.getUser();
+
+        System.out.println("Found AuthEntity: " + auth.getId());
+        System.out.println("Linked user ID: " + user.getId());
+
+        List<AppointmentEntity> appointments = appointmentRepository.findAllByUserId(user.getId());
+
+        System.out.println("Found appointments: " + appointments.size());
+
+        return appointments.stream()
+                .map(appointment -> {
+
+                    DonationSlotEntity slotEntity = appointment.getSlot();
+                    CreateSlotDto slotDto = new CreateSlotDto();
+                    slotDto.setDateTime(slotEntity.getDateTime());
+                    slotDto.setLocation(slotEntity.getLocation());
+                    slotDto.setCapacity(slotEntity.getCapacity());
+
+                    GetAppointmentDto dto = new GetAppointmentDto();
+                    dto.setId(appointment.getId());
+                    dto.setUserId(user.getId());
+                    dto.setBookedAt(appointment.getBookedAt());
+                    dto.setStatus(appointment.getAppointmentStatus());
+                    dto.setSlot(slotDto);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

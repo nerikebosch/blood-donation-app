@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/donor-profiles")
@@ -31,21 +34,36 @@ public class DonorProfileController {
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DONOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DONOR')")
     public ResponseEntity<GetDonorProfileDto> getByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(donorProfileService.getDonorById(userId));
     }
 
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<GetDonorProfileDto>> getAllDonors() {
+        return ResponseEntity.ok(donorProfileService.getAllDonors());
+    }
+
     @PutMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DONOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DONOR')")
     public ResponseEntity<UpdateDonorProfileDto> update(@PathVariable Long userId, @RequestBody UpdateDonorProfileDto dto) {
         return ResponseEntity.ok(donorProfileService.updateDonorProfile(userId, dto));
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('DONOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_DONOR')")
     public ResponseEntity<Void> delete(@PathVariable Long userId) {
         donorProfileService.deleteDonorProfile(userId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_DONOR')")
+    public ResponseEntity<GetDonorProfileDto> getMyDonorProfile(Principal principal) {
+        String username = principal.getName();
+        GetDonorProfileDto profile = donorProfileService.getDonorProfileByUsername(username);
+        return new ResponseEntity<>(profile, HttpStatus.OK);
+    }
+
 }

@@ -18,12 +18,23 @@ public class CreateSlotDto {
     @Min(value = 1, message = "Capacity must be at least 1")
     private int capacity;
 
+    private int BookedCount;
+
     public CreateSlotDto() {}
 
-    public CreateSlotDto(LocalDateTime dateTime, String location, int capacity) {
+    public CreateSlotDto(LocalDateTime dateTime, String location, int capacity, int bookedCount) {
         this.dateTime = dateTime;
         this.location = location;
         this.capacity = capacity;
+        BookedCount = bookedCount;
+    }
+
+    public int getBookedCount() {
+        return BookedCount;
+    }
+
+    public void setBookedCount(int bookedCount) {
+        BookedCount = bookedCount;
     }
 
     public LocalDateTime getDateTime() {
