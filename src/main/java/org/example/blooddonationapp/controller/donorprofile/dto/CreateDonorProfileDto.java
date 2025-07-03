@@ -1,14 +1,29 @@
 package org.example.blooddonationapp.controller.donorprofile.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 public class CreateDonorProfileDto {
+    @NotNull
     private Long userId;
+
+    @NotBlank
     private String ethnicity;
+
+    @NotBlank
     private String bloodType;
+
+    @NotNull
     private LocalDate dateOfBirth;
+
+    @NotBlank
     private String gender;
+
+    @NotBlank
     private String address;
+
     private LocalDate lastDonationDate;
 
     public CreateDonorProfileDto(Long userId, String ethnicity, String bloodType, LocalDate dateOfBirth, String gender, String address, LocalDate lastDonationDate) {

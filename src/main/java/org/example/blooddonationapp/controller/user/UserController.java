@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -52,6 +53,14 @@ public class UserController {
         userService.updateUserById(id, dto);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<GetUserDto>> getAllUsers() {
+        List<GetUserDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

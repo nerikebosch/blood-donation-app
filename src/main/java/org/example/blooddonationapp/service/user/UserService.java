@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -49,6 +52,18 @@ public class UserService {
         user.setEmail(dto.getEmail());
         userRepository.save(user);
     }
+
+    public List<GetUserDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new GetUserDto(
+                        user.getId(),
+                        user.getName(),
+                        user.getSurname(),
+                        user.getEmail()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public void updateUserById(Long userId, UpdateUserDto dto) {

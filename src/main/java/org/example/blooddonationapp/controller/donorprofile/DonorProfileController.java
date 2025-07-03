@@ -1,5 +1,6 @@
 package org.example.blooddonationapp.controller.donorprofile;
 
+import jakarta.validation.Valid;
 import org.example.blooddonationapp.controller.donorprofile.dto.CreateDonorProfileDto;
 import org.example.blooddonationapp.controller.donorprofile.dto.CreateDonorProfileResponseDto;
 import org.example.blooddonationapp.controller.donorprofile.dto.GetDonorProfileDto;
@@ -28,7 +29,7 @@ public class DonorProfileController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateDonorProfileResponseDto> create(@RequestBody CreateDonorProfileDto dto) {
+    public ResponseEntity<CreateDonorProfileResponseDto> create(@Valid @RequestBody CreateDonorProfileDto dto) {
         CreateDonorProfileResponseDto profile = donorProfileService.createDonorProfile(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(profile);
     }

@@ -6,18 +6,13 @@ import org.example.blooddonationapp.controller.appointment.dto.CreateAppointment
 import org.example.blooddonationapp.controller.appointment.dto.GetAppointmentDto;
 import org.example.blooddonationapp.controller.appointment.dto.UpdateAppointmentStatusDto;
 import org.example.blooddonationapp.controller.donationslot.dto.CreateSlotDto;
-import org.example.blooddonationapp.infrastructure.entity.AppointmentEntity;
-import org.example.blooddonationapp.infrastructure.entity.AuthEntity;
-import org.example.blooddonationapp.infrastructure.entity.DonationSlotEntity;
-import org.example.blooddonationapp.infrastructure.entity.UserEntity;
-import org.example.blooddonationapp.infrastructure.repository.AppointmentRepository;
-import org.example.blooddonationapp.infrastructure.repository.AuthRepository;
-import org.example.blooddonationapp.infrastructure.repository.DonationSlotRepository;
-import org.example.blooddonationapp.infrastructure.repository.UserRepository;
+import org.example.blooddonationapp.infrastructure.entity.*;
+import org.example.blooddonationapp.infrastructure.repository.*;
 import org.example.blooddonationapp.commontypes.AppointmentStatus;
 import org.example.blooddonationapp.service.user.error.UserNotFound;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,14 +24,16 @@ public class AppointmentService {
     private final UserRepository userRepository;
     private final DonationSlotRepository slotRepository;
     private final AuthRepository authRepository;
+    private final DonorProfileRepository donorProfileRepository;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               UserRepository userRepository,
-                              DonationSlotRepository slotRepository, AuthRepository authRepository) {
+                              DonationSlotRepository slotRepository, AuthRepository authRepository, DonorProfileRepository donorProfileRepository) {
         this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
         this.slotRepository = slotRepository;
         this.authRepository = authRepository;
+        this.donorProfileRepository = donorProfileRepository;
     }
 
     @Transactional
@@ -135,6 +132,19 @@ public class AppointmentService {
 
         appointment.setAppointmentStatus(dto.getAppointmentStatus());
         appointmentRepository.save(appointment);
+
+        if (dto.getAppointmentStatus() == AppointmentStatus.COMPLETED) {
+            // Find donor profile by user ID
+            UserEntity user = appointment.getUser();
+
+            DonorProfileEntity donorProfile = donorProfileRepository.findById(user.getId())
+                    .orElseThrow(() -> new RuntimeException("Donor profile not found for user"));
+
+            // Update lastDonationDate to current date
+            donorProfile.setLastDonationDate(LocalDate.now());
+
+            donorProfileRepository.save(donorProfile);
+        }
     }
 
     public List<GetAppointmentDto> getAppointmentsByUsername(String username) {

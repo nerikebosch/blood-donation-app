@@ -5,13 +5,19 @@ import org.example.blooddonationapp.controller.medicaltests.dto.CreateMedicalTes
 import org.example.blooddonationapp.controller.medicaltests.dto.CreateMedicalTestResponseDto;
 import org.example.blooddonationapp.controller.medicaltests.dto.GetMedicalTestDto;
 import org.example.blooddonationapp.controller.medicaltests.dto.UpdateMedicalTestDto;
+import org.example.blooddonationapp.infrastructure.entity.AuthEntity;
 import org.example.blooddonationapp.infrastructure.entity.DonorProfileEntity;
 import org.example.blooddonationapp.infrastructure.entity.MedicalTestEntity;
+import org.example.blooddonationapp.infrastructure.entity.UserEntity;
+import org.example.blooddonationapp.infrastructure.repository.AuthRepository;
 import org.example.blooddonationapp.infrastructure.repository.DonorProfileRepository;
 import org.example.blooddonationapp.infrastructure.repository.MedicalTestRepository;
+import org.example.blooddonationapp.infrastructure.repository.UserRepository;
+import org.example.blooddonationapp.service.user.error.UserNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +26,16 @@ public class MedicalTestService {
 
     private final MedicalTestRepository medicalTestRepository;
     private final DonorProfileRepository donorProfileRepository;
+    private final UserRepository userRepository;
+    private final AuthRepository authRepository;
 
     @Autowired
     public MedicalTestService(MedicalTestRepository medicalTestRepository,
-                              DonorProfileRepository donorProfileRepository) {
+                              DonorProfileRepository donorProfileRepository, UserRepository userRepository, AuthRepository authRepository) {
         this.medicalTestRepository = medicalTestRepository;
         this.donorProfileRepository = donorProfileRepository;
+        this.userRepository = userRepository;
+        this.authRepository = authRepository;
     }
 
     public CreateMedicalTestResponseDto createMedicalTest(CreateMedicalTestDto dto) {
@@ -108,4 +118,44 @@ public class MedicalTestService {
         }
         medicalTestRepository.deleteById(medicalTestId);
     }
+
+    public List<GetMedicalTestDto> getTestsByUsername(String username) {
+        AuthEntity auth = authRepository.findByUsername(username).orElseThrow(() -> UserNotFound.createWithUsername(username));
+        UserEntity user = auth.getUser();
+
+        DonorProfileEntity profile = donorProfileRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Donor profile not found"));
+
+        return medicalTestRepository.findByDonorId(user.getId()).stream()
+                .map(test -> new GetMedicalTestDto(
+                        test.getId(),
+                        test.getDonor().getId(),
+                        test.getTestType(),
+                        test.getResult(),
+                        test.getTestDate(),
+                        test.getNotes()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<GetMedicalTestDto> getAllTests() {
+        List<MedicalTestEntity> tests = medicalTestRepository.findAll();
+
+        List<GetMedicalTestDto> dtos = new ArrayList<>();
+        for (MedicalTestEntity test : tests) {
+            GetMedicalTestDto dto = new GetMedicalTestDto();
+            dto.setId(test.getId());
+            dto.setDonorId(test.getDonor().getId());
+            dto.setTestType(test.getTestType());
+            dto.setResult(test.getResult());
+            dto.setTestDate(test.getTestDate());
+            dto.setNotes(test.getNotes());
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
+
 }

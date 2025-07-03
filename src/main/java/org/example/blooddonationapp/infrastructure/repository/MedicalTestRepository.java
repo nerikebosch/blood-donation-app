@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface MedicalTestRepository extends JpaRepository<MedicalTestEntity, Long> {
     List<MedicalTestEntity> findByDonor(DonorProfileEntity donor);
+
+    List<MedicalTestEntity> findByDonorId(Long donorId);
 }
